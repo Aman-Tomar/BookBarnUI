@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Register } from '../models/auth/register.models';
 import { AuthService } from '../services/auth/auth.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,7 @@ export class RegisterComponent {
     confirmPassword: new FormControl('', [Validators.required]), 
   });
 
-  constructor(private authService: AuthService) {}
+  private authService: AuthService = inject(AuthService);
 
   get Name()
   {
@@ -47,13 +48,15 @@ export class RegisterComponent {
       }
       else {
         const registerData: Register = {
-          name: this.registerForm.value.name!,
-          email: this.registerForm.value.email!,
-          password: this.registerForm.value.password!
+          Username: this.registerForm.value.name!,
+          Email: this.registerForm.value.email!,
+          Password: this.registerForm.value.password!
         }
 
         this.authService.register(registerData).subscribe({
           next: (response) => {
+            console.log(response);
+            console.log(response.toString);
             // Success
           },
           error: (err) => {

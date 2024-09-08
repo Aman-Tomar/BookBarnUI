@@ -31,12 +31,13 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const loginData: Login = {
-        email: this.loginForm.value.email!,
-        password: this.loginForm.value.password!
+        Email: this.loginForm.value.email!,
+        Password: this.loginForm.value.password!
       }
 
       this.authService.login(loginData).subscribe({
         next: (response) => {
+          console.log(response);
           // success
         },
         error: (err) => {

@@ -3,8 +3,12 @@
 	<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 	  <div class="mb-3">
 		<label for="name" class="form-label">Name:</label>
-		<input [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" id="name" type="text" class="form-control" formControlName="name">
-		@if (Name?.invalid && Name?.touched)
+		<input [class.is-invalid]="Name?.invalid && Name?.touched"
+		  id="name" type="text" class="form-control"
+		  formControlName="name" 
+		  placeholder="Enter your Name"
+		>
+		@if(Name?.invalid && Name?.touched)
 		{
 			@if(Name?.hasError('required'))
             {
@@ -15,10 +19,14 @@
   
 	  <div class="mb-3">
 		<label for="email" class="form-label">Email:</label>
-		<input [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" id="email" type="email" class="form-control" formControlName="registerForm.get('email')">
+		<input [class.is-invalid]="Email?.invalid && Email?.touched"
+		  id="email" type="email" class="form-control" 
+		  formControlName="email"
+		  placeholder="Enter you email"
+		>
 		@if(Email?.invalid && Email?.touched)
 		{
-		  @if(Email?.errors?.['required']){
+		  @if(Email?.hasError('required')){
 			<small class="text-danger">*Email is Required</small>
 		  }
 		  @if(Email?.errors?.['email']){
@@ -30,7 +38,11 @@
   
 	  <div class="mb-3">
 		<label for="password" class="form-label">Password:</label>
-		<input [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" id="password" type="password" class="form-control" formControlName="registerForm.get('password')">
+		<input [class.is-invalid]="Password?.invalid && Password?.touched"
+		  id="password" type="password" class="form-control"
+		  formControlName="password"
+		  placeholder="Enter your password"
+		>
 		@if (Password?.invalid && Password?.touched)
 		{
 			@if(Password?.hasError('required'))
@@ -42,7 +54,12 @@
   
 	  <div class="mb-3">
 		<label for="confirmPassword" class="form-label">Confirm Password:</label>
-		<input [class.is-invalid]="registerForm.errors?.['passwordsMismatch'] && registerForm.get('confirmPassword')?.touched"  id="confirmPassword" type="password" class="form-control" formControlName="registerForm.get('confirmPassword')">
+		<input [class.is-invalid]="(registerForm.errors?.['passwordsMismatch']) ||
+		  (ConfirmPassword?.invalid && ConfirmPassword?.touched)"
+		  id="confirmPassword" type="password" class="form-control"
+		  formControlName="confirmPassword"
+		  placeholder="Re-enter your password"
+		 >
 		@if (ConfirmPassword?.invalid && ConfirmPassword?.touched)
 		{
 			@if(ConfirmPassword?.hasError('required'))
@@ -58,5 +75,5 @@
   
 	  <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Register</button>
 	</form>
-  </div>
-  
+</div>
+ 

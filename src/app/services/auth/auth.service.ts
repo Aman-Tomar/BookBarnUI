@@ -1,29 +1,23 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Register } from '../../models/auth/register.models';
 import { Login } from '../../models/auth/login.models';
+import { RequestService } from '../request/request.service';
+import { TokenService } from '../token/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
-  private baseUrl = "https://{}/api/User"
+  private baseUrl = "https://bookbarn-userauth-api-gcedhuhsf6bxf7fp.southeastasia-01.azurewebsites.net/api/User"
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private requestService: RequestService, private tokenService: TokenService) {}
+   
   register(registerData: Register) {
-    return this.http.post(`${this.baseUrl}/Register`, registerData, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.requestService.post<any>(`${this.baseUrl}/Register`, registerData);
   }
 
   login(loginData: Login) {
-    return this.http.post(`${this.baseUrl}/Login`, loginData, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.requestService.post<any>(`${this.baseUrl}/Login`, loginData);
   }
 }
