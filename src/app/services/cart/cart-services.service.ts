@@ -1,99 +1,46 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ICart } from '../../models/cart/cart.models';
 import { ICartItems } from '../../models/cartItems/cartItems.models';
-// import { AuthService } from './auth.service';
+import { RequestService } from '../request/request.service'; // Import the RequestService
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-    private cartApiUrl = ''; // Replace with your CartService API URL
-    private cartItemApiUrl='add the cartItems url';
-    private bookApiUrl='';
+    private cartApiUrl = 'https://your-cart-api-url'; // Replace with your CartService API URL
+    private cartItemApiUrl = 'https://your-cartItem-api-url'; // Replace with your CartItem API URL
 
-//   constructor(private http: HttpClient, private authService:AuthService ) {}//inject the auth aervice here
+    constructor(private requestService: RequestService) {} // Inject the RequestService
 
- 
-  getCartByUserId(userId:number):Observable<any>
-  {
-    const token=this.authService.getToken();
-    return this.http.get<ICart>(`${this.cartApiUrl}/user/${userId}`,{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
-    })
-  }
+    // Get cart by user ID
+    getCartByUserId(userId: number): Observable<ICart> {
+        return this.requestService.get<ICart>(`${this.cartApiUrl}/user/${userId}`);
+    }
 
-  //Create a new cart
-  createCart(cart:ICart):Observable<ICart>
-  {
-    const token=this.authService.getToken();
-    return this.http.post<ICart>(this.cartApiUrl,cart,{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
-    })
-  }
+    // Create a new cart
+    createCart(cart: ICart): Observable<ICart> {
+        return this.requestService.post<ICart>(this.cartApiUrl, cart);
+    }
 
- 
-  // Add cart item
-  addCartItem(cartItem: ICartItems): Observable<ICartItems> {
-    const token=this.authService.getToken();
-    return this.http.post<ICartItems>(this.cartItemApiUrl, cartItem,{
-        headers:
-        {
-            Authorization:`Bearer ${token}`
-        }
-    });
-  }
+    // Add cart item
+    addCartItem(cartItem: ICartItems): Observable<ICartItems> {
+        return this.requestService.post<ICartItems>(this.cartItemApiUrl, cartItem);
+    }
 
-  // Remove cart item
-  removeCartItem(cartItemId: number): Observable<void> {
-    const token=this.authService.getToken();
-    return this.http.delete<void>(`${this.cartItemApiUrl}/${cartItemId}`,{
-        headers:
-        {
-            Authorization:`Bearer ${token}`
-        }
-    });
-  }
+    // Remove cart item
+    removeCartItem(cartItemId: number): Observable<void> {
+        return this.requestService.delete<void>(`${this.cartItemApiUrl}/${cartItemId}`);
+    }
 
+    // Update cart item
+    updateCartItem(cartItem: ICartItems): Observable<void> {
+        return this.requestService.put<void>(this.cartItemApiUrl, cartItem);
+    }
 
-  //update cartItem
-  updateCartItem(cartItem:ICartItems):Observable<void>
-  {
-    const token=this.authService.getToken();
-    return this.http.put<void>(this.cartItemApiUrl, cartItem,{
-        headers:
-        {
-            Authorization:`Bearer ${token}`
-        }
-    })
-  }
-
-//   //Clearing the cart
-//   clearCart(cartId: number): Observable<void> {
-//     const token=this.authService.getToken();
-//     return this.http.delete<void>(`${this.cartApiUrl}/${cartId}`,{
-//         headers:
-//         {
-//             Authorization:`Bearer ${token}`
-//         }
-
-//     });
-//   }
-
-
-//Change it so that only the status of the cart is changed
-//So update the cart
-
-
-
-
-
-
+    // Change cart status
+    updateCartStatus(cart: ICart): Observable<void> {
+        return this.requestService.put<void>(this.cartApiUrl, cart); // Assuming the cart update changes only the status
+    }
 }
-

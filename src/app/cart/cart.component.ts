@@ -3,6 +3,7 @@ import { ICart } from '../models/cart/cart.models';
 import { ICartItems } from '../models/cartItems/cartItems.models';
 import { CartService } from '../services/cart/cart-services.service';
 import { NgFor, NgIf } from '@angular/common';
+import { TokenService } from '../services/token/token.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,11 +18,11 @@ export class CartComponent implements OnInit
   userId:number|null=null;
   cartItems:ICartItems[]=[];
   totalPrice:number|null=null;
-private authService:AuthService=inject(AuthService);
+private tokenService:TokenService=inject(TokenService);
 private cartService:CartService=inject(CartService);
 
   ngOnInit(): void {
-    this.userId=this.authService.getUserIdFromToken();
+    this.userId=this.tokenService.getUserIdFromToken();
     if(this.userId)
     {
       this.loadCart();
@@ -123,7 +124,7 @@ removeItem(cartItemId: number) {
 
 clearCart() {
   this.cartItems = [];
-  this.cartService.clearCart(this.cart?.cartId ?? 0).subscribe(
+  this.cartService.removeCartItem(this.cart?.cartId ?? 0).subscribe(
     () => {
       this.totalPrice = 0; // Reset the total price when the cart is cleared
       console.log('Cart cleared successfully');
