@@ -1,8 +1,11 @@
+import { IBook } from "../book/book.models";
 import { ICart } from "../cart/cart.models";
 
-export interface ICartItems extends ICart
+//add the interface of the book model
+export interface ICartItems 
 {
     cartItemId:number,
     bookId:number,
-    quantity:number
+    quantity:number,
+    
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth/auth.service';
 import { Login } from '../models/auth/login.models';
+import { TokenService } from '../services/token/token.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required])
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,private tokenService: TokenService) {}
   
   get Email()
   {
@@ -37,8 +38,7 @@ export class LoginComponent {
 
       this.authService.login(loginData).subscribe({
         next: (response) => {
-          console.log(response);
-          // success
+          this.tokenService.setToken(response.token);
         },
         error: (err) => {
           // error

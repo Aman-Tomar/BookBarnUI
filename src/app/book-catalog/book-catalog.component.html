@@ -1,0 +1,17 @@
+<div class="container">
+    <h2>Book Catalog</h2>
+    <div class="row" *ngFor="let book of books">
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img [src]="book.Image" class="card-img-top" [alt]="book.Title">
+          <div class="card-body">
+            <h5 class="card-title">{{ book.Title }}</h5>
+            <p class="card-text">{{ book.Description }}</p>
+            <p class="card-text"><strong>Price:</strong> ₹{{ book.Price }}</p>
+            <button class="btn btn-primary" (click)="addToCart(book)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
