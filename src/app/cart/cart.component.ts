@@ -4,11 +4,14 @@ import { ICartItems } from '../models/cartItems/cartItems.models';
 import { CartService } from '../services/cart/cart-services.service';
 import { NgFor, NgIf } from '@angular/common';
 import { TokenService } from '../services/token/token.service';
-
+import { FormsModule } from '@angular/forms';
+import { BookService } from '../services/book/book.service';
+import { IBook } from '../models/book/book.models';
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NgIf,NgFor],
+  imports: [NgIf,NgFor,FormsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -16,36 +19,71 @@ export class CartComponent implements OnInit
 {
   cart:ICart|undefined;
   userId:number|null=null;
-  cartItems:ICartItems[]=[];
+  // cartItems:ICartItems[]=[];
+  cartItems:Array<ICartItems &{bookDetails?:IBook}>=[];
   totalPrice:number|null=null;
+  shippingAddress: string = '';  // New variable for shipping address
+  selectedPaymentMethod: string = ''; 
 private tokenService:TokenService=inject(TokenService);
 private cartService:CartService=inject(CartService);
+private bookService:BookService=inject(BookService);
 
   ngOnInit(): void {
-    this.userId=this.tokenService.getUserIdFromToken();
-    if(this.userId)
-    {
-      this.loadCart();
-    }
-    else{
-      console.error("User ID is not valid");
-    }
+   
     
+      this.loadCart();
+    
+    // this.createDummyUser();
+    
+  }
+  createDummyUser()
+  {
+    this.userId=0;
+    const dummyCart:ICart={
+      cartId:1,
+      userId:this.userId,
+      cartItems:[],
+      isCartActive:true,
+    }
+    this.cart=dummyCart;
   }
 
   loadCart(){
-    if(this.userId)
-    {
-      this.cartService.getCartByUserId(this.userId).subscribe(
+    
+      this.cartService.getCartByUserId().subscribe(
         {
-          next:(cart)=>{this.cart=cart, this.cartItems=cart.cartItems,this.calculateTotalPrice()},
+          next:(cart)=>{this.cart=cart,
+             this.cartItems=cart.cartItems,
+             console.log("Cart loaded")
+             console.log(cart)
+             this.calculateTotalPrice()},
           error:(err:any)=>{console.error(err)}
         }
         
        
       )
-    }
+    
   }
+
+  loadBooksForCartItems(cartItems: ICartItems[]) {
+    const bookRequests = cartItems.map(item =>
+      this.bookService.getBookById(item.bookId) // Fetch book details
+    );
+
+    forkJoin(bookRequests).subscribe({
+      next: (books: IBook[]) => {
+        // Combine cart items with the corresponding book details
+        this.cartItems = cartItems.map((item, index) => ({
+          ...item,
+          bookDetails: books[index]
+        }));
+        this.calculateTotalPrice();
+      },
+      error: (err: any) => { console.error('Error fetching book details', err); }
+    });
+  }
+
+  
 
   createNewCart() {
     const newCart: ICart = {
@@ -123,20 +161,71 @@ removeItem(cartItemId: number) {
 }
 
 clearCart() {
-  this.cartItems = [];
-  this.cartService.removeCartItem(this.cart?.cartId ?? 0).subscribe(
-    () => {
-      this.totalPrice = 0; // Reset the total price when the cart is cleared
-      console.log('Cart cleared successfully');
-    },
-    (error:any) => console.error('Error clearing cart', error)
-  );
+  if (this.cart) {
+    // Empty the cart items array
+    this.cart.cartItems = [];
+
+    // Call the updateCartStatus method to update the cart with empty cartItems
+    this.cartService.updateCartStatus(this.cart).subscribe(
+      {
+        next: () => {
+          this.totalPrice = 0; // Reset the total price when the cart is cleared
+          console.log('Cart cleared successfully');
+        },
+        error: (error: any) => {
+          console.error('Error clearing cart', error);
+        }
+      }
+    );
+  }
 }
+
+checkout()
+{
+  if (!this.shippingAddress || !this.selectedPaymentMethod) {
+    console.error('Please provide a shipping address and select a payment method');
+    return;
+  }
+
+  if(this.cart)
+  {
+    this.cart?.isCartActive!=false;
+    // Call the updateCartStatus method to update the cart with empty cartItems
+    this.cartService.updateCartStatus(this.cart).subscribe(
+     {
+       next: () => {
+         this.totalPrice = 0;
+         this.cartItems=[]; // Reset the total price when the cart is cleared
+       
+         console.log('Checkout successful, cart cleared.');
+
+         // Further processing (e.g., redirect to a confirmation page)
+         // You can store or send the shipping address and payment method here
+         const orderDetails = {
+           shippingAddress: this.shippingAddress,
+           paymentMethod: this.selectedPaymentMethod,
+           totalPrice: this.totalPrice
+         };
+ 
+         console.log('Order details:', orderDetails);
+         // Optionally: Call an order service to create the order with these details
+         // this.orderService.createOrder(orderDetails).subscribe();
+       },
+       error: (error: any) => {
+         console.error('Error clearing cart', error);
+       }
+     }
+   );
+  }
+ 
+}
+
+
 
 calculateTotalPrice() {
   if (this.cart) {
     this.totalPrice = this.cartItems.reduce((total, item) => {
-      return total + (item.bookPrice * item.quantity); // Use book.price to calculate
+      return total + ((item.bookDetails?.Price || 0) * item.quantity); // Use book.price to calculate
     }, 0);
   }
 }

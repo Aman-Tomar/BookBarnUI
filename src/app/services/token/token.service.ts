@@ -27,6 +27,6 @@ export class TokenService {
       const payload = JSON.parse(atob(token.split('.')[1])); // Decode payload from token
       return payload?.userId || null;  // Assume userId is in the payload
     }
-    return null;
+    return 0;
   }
 }

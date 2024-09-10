@@ -1,0 +1,126 @@
+{
+    "books":[
+    {
+      "BookId": 1,
+      "Title": "The Great Gatsby",
+      "Description": "A classic novel set in the 1920s about the mysterious Jay Gatsby.",
+      "Price": 250,
+      "Image": "https://example.com/great-gatsby.jpg",
+      "AverageRating": 4.5,
+      "AvailableBookCount": 5,
+      "AuthorId": 1,
+      "Author": "F. Scott Fitzgerald",
+      "CategoryId": 1,
+      "Category": "Fiction"
+    },
+    {
+      "BookId": 2,
+      "Title": "To Kill a Mockingbird",
+      "Description": "A novel about racial injustice in the Deep South, seen through the eyes of young Scout Finch.",
+      "Price": 300,
+      "Image": "https://example.com/mockingbird.jpg",
+      "AverageRating": 4.8,
+      "AvailableBookCount": 3,
+      "AuthorId": 2,
+      "Author": "Harper Lee",
+      "CategoryId": 2,
+      "Category": "Drama"
+    },
+    {
+      "BookId": 3,
+      "Title": "1984",
+      "Description": "A dystopian novel that explores the dangers of totalitarianism.",
+      "Price": 200,
+      "Image": "https://example.com/1984.jpg",
+      "AverageRating": 4.6,
+      "AvailableBookCount": 10,
+      "AuthorId": 3,
+      "Author": "George Orwell",
+      "CategoryId": 3,
+      "Category": "Science Fiction"
+    },
+    {
+      "BookId": 4,
+      "Title": "Moby Dick",
+      "Description": "The saga of Captain Ahab’s obsessive quest to kill the white whale.",
+      "Price": 220,
+      "Image": "https://example.com/moby-dick.jpg",
+      "AverageRating": 4.2,
+      "AvailableBookCount": 8,
+      "AuthorId": 4,
+      "Author": "Herman Melville",
+      "CategoryId": 1,
+      "Category": "Adventure"
+    },
+    {
+      "BookId": 5,
+      "Title": "Pride and Prejudice",
+      "Description": "A romantic novel that charts the emotional development of Elizabeth Bennet.",
+      "Price": 180,
+      "Image": "https://example.com/pride-prejudice.jpg",
+      "AverageRating": 4.7,
+      "AvailableBookCount": 12,
+      "AuthorId": 5,
+      "Author": "Jane Austen",
+      "CategoryId": 4,
+      "Category": "Romance"
+    }
+  ],
+  "carts": [
+    {
+      "cartId": 1,
+      "userId": 101,
+      "cartItems": [
+        {
+          "cartItemId": 1,
+          "bookId": 1,
+          "quantity": 2
+        },
+        {
+          "cartItemId": 2,
+          "bookId": 2,
+          "quantity": 1
+        }
+      ],
+      "isCartActive": true
+    },
+    {
+      "cartId": 2,
+      "userId": 102,
+      "cartItems": [
+        {
+          "cartItemId": 3,
+          "bookId": 1003,
+          "quantity": 1
+        }
+      ],
+      "isCartActive": true
+    },
+    {
+      "cartId": 3,
+      "userId": 103,
+      "cartItems": [
+        {
+          "cartItemId": 4,
+          "bookId": 4,
+          "quantity": 3
+        },
+        {
+          "cartItemId": 5,
+          "bookId": 5,
+          "quantity": 2
+        }
+      ],
+      "isCartActive": false
+    }
+  ],
+  "cartItems":[
+    {
+      "cartItemId":0,
+      "bookId":0,
+      "quantity":0
+    }
+  ]
+
+}
+  
